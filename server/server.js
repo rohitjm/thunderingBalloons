@@ -21,6 +21,26 @@ var config = require('./db/config/config');
 var env = config.development;
 
 
+//Webpack dev server stuff
+var webpack = require('webpack');
+var WebpackDevServer = require('webpack-dev-server');
+var wpconfig = require('../webpack.config');
+var proxy = require('proxy-middleware');
+var url = require('url');
+app.use('/assets', proxy(url.parse('http://localhost:8081/assets')));
+
+/***** Webpack server instance *****/
+var server = new WebpackDevServer(webpack(wpconfig), {
+    contentBase: __dirname,
+    hot: true,
+    quiet: false,
+    noInfo: false,
+    publicPath: "/assets/",
+
+    stats: { colors: true }
+});
+
+
 ////////////////////
 // router modules //
 ////////////////////
@@ -61,7 +81,7 @@ app.use(function(req, res, next) {
 });
 
 app.use(session({
-  secret: "TestSecret", 
+  secret: "TestSecret",
   resave: false,
   saveUninitialized: true
 }));
@@ -79,7 +99,7 @@ app.use('/places', placesRouter);
 app.use('/invite', inviteRouter);
 app.use('/', rootRouter);
 
-
+server.listen(8081, "localhost", function() {});
 app.listen(port);
 
 console.log("App started on port:",port);
