@@ -1,6 +1,6 @@
 
 import React from 'react';
-import searchYelp from '../utils/yelp.js';
+import searchYelp from '../../server/utils/yelp.js';
 
 class SearchBar extends React.Component {
 
